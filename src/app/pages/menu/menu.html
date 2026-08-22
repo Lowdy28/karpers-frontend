@@ -1,0 +1,12 @@
+<div class="menu">
+  <h1>Karpers</h1>
+
+  <div class="product-card" *ngFor="let product of products">
+    <h3>{{ product.name }}</h3>
+    <p>${{ product.price }}</p>
+
+    <ul *ngIf="product.variants.length > 0">
+      <li *ngFor="let variant of product.variants">{{ variant }}</li>
+    </ul>
+  </div>
+</div>
