@@ -8,5 +8,12 @@
     <ul *ngIf="product.variants.length > 0">
       <li *ngFor="let variant of product.variants">{{ variant }}</li>
     </ul>
+
+    <button (click)="addToCart(product)">Agregar</button>
+  </div>
+
+  <div class="cart-bar" *ngIf="cart().length > 0">
+    <p>{{ cart().length }} producto(s) — Total: ${{ cartTotal() }}</p>
+    <button (click)="submitOrder()">Enviar pedido</button>
   </div>
 </div>
