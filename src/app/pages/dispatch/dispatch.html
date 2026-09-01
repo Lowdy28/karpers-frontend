@@ -1,0 +1,19 @@
+<div class="dispatch">
+  <h1>Despacho</h1>
+
+  <div class="order-card" *ngFor="let order of orders()">
+    <h3>Mesa {{ order.tableNumber }}</h3>
+    <p>Estado: {{ statusLabels[order.status] }}</p>
+
+    <ul>
+      <li *ngFor="let item of order.items">
+        {{ item.quantity }}x {{ item.product?.name }}
+        <span *ngIf="item.selectedVariant"> ({{ item.selectedVariant }})</span>
+      </li>
+    </ul>
+
+    <button *ngIf="order.status < 3" (click)="advanceStatus(order)">
+      Avanzar a {{ statusLabels[order.status + 1] }}
+    </button>
+  </div>
+</div>
