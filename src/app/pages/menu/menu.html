@@ -1,7 +1,7 @@
 <div class="menu">
   <h1>Karpers</h1>
 
-  <div class="product-card" *ngFor="let product of products">
+  <div class="product-card" *ngFor="let product of products()">
     <h3>{{ product.name }}</h3>
     <p>${{ product.price }}</p>
 
