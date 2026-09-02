@@ -1,5 +1,6 @@
 <div class="dispatch">
   <h1>Despacho</h1>
+  <button (click)="logout()">Cerrar sesión</button>
 
   <div class="order-card" *ngFor="let order of orders()">
     <h3>Mesa {{ order.tableNumber }}</h3>

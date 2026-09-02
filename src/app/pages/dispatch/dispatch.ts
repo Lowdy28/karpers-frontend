@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth } from '../../services/auth';
 import { Realtime } from '../../services/realtime';
+import { Router } from '@angular/router';
 
 interface OrderItem {
   id: number;
@@ -30,6 +31,7 @@ interface Order {
 export class Dispatch implements OnInit {
   private http = inject(HttpClient);
   private auth = inject(Auth);
+  private router = inject(Router);
   private apiUrl = 'http://localhost:5098/api/orders';
   private realtime = inject(Realtime);
 
@@ -60,5 +62,10 @@ export class Dispatch implements OnInit {
     this.http
       .patch(`${this.apiUrl}/${order.id}/status`, newStatus, { headers })
       .subscribe(() => this.loadOrders());
+  }
+
+  logout(): void {
+    this.auth.logout();
+    this.router.navigate(['/login']);
   }
 }
