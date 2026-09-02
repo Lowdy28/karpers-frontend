@@ -3,9 +3,11 @@ import { Menu } from './pages/menu/menu';
 import { Login } from './pages/login/login';
 import { Dispatch } from './pages/dispatch/dispatch';
 import { authGuard } from './guards/auth-guard';
+import { TableQr } from './pages/table-qr/table-qr';
 
 export const routes: Routes = [
   { path: '', component: Menu },
   { path: 'login', component: Login },
   { path: 'despacho', component: Dispatch, canActivate: [authGuard] },
+  { path: 'qr', component: TableQr, canActivate: [authGuard] },
 ];

@@ -1,0 +1,9 @@
+<div class="table-qr">
+  <h1>Códigos QR por mesa</h1>
+
+  <div class="qr-card" *ngFor="let code of qrCodes()">
+    <h3>Mesa {{ code.tableNumber }}</h3>
+    <img [src]="code.dataUrl" [alt]="'QR mesa ' + code.tableNumber" />
+    <button (click)="download(code)">Descargar</button>
+  </div>
+</div>
