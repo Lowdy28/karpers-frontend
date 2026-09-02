@@ -1,4 +1,8 @@
 <div class="dispatch">
+  <div class="new-order-banner" *ngIf="newOrderAlert()">
+    🔔 ¡Pedido nuevo!
+  </div>
+
   <h1>Despacho</h1>
   <button (click)="logout()">Cerrar sesión</button>
 
