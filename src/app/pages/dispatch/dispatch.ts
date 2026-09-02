@@ -2,6 +2,7 @@ import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Auth } from '../../services/auth';
+import { Realtime } from '../../services/realtime';
 
 interface OrderItem {
   id: number;
@@ -30,12 +31,16 @@ export class Dispatch implements OnInit {
   private http = inject(HttpClient);
   private auth = inject(Auth);
   private apiUrl = 'http://localhost:5098/api/orders';
+  private realtime = inject(Realtime);
 
   orders = signal<Order[]>([]);
   statusLabels = ['Recibido', 'Preparando', 'Listo', 'Entregado'];
 
   ngOnInit(): void {
     this.loadOrders();
+
+    this.realtime.onOrderCreated(() => this.loadOrders());
+    this.realtime.onOrderStatusChanged(() => this.loadOrders());
   }
 
   loadOrders(): void {
