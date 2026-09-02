@@ -1,13 +1,15 @@
 <div class="menu">
   <h1>Karpers</h1>
+  <p *ngIf="tableNumber() > 0">Mesa {{ tableNumber() }}</p>
 
   <div class="product-card" *ngFor="let product of products()">
     <h3>{{ product.name }}</h3>
     <p>${{ product.price }}</p>
 
-    <ul *ngIf="product.variants.length > 0">
-      <li *ngFor="let variant of product.variants">{{ variant }}</li>
-    </ul>
+    <select *ngIf="product.variants.length > 0" (change)="selectVariant(product.id, $any($event.target).value)">
+      <option value="" disabled selected>Elige un sabor</option>
+      <option *ngFor="let variant of product.variants" [value]="variant">{{ variant }}</option>
+    </select>
 
     <button (click)="addToCart(product)">Agregar</button>
   </div>
