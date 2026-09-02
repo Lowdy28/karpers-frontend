@@ -36,13 +36,27 @@ export class Dispatch implements OnInit {
   private realtime = inject(Realtime);
 
   orders = signal<Order[]>([]);
+  newOrderAlert = signal<boolean>(false);
+  private audio = new Audio('/sounds/new-order.mp3');
   statusLabels = ['Recibido', 'Preparando', 'Listo', 'Entregado'];
 
   ngOnInit(): void {
     this.loadOrders();
 
-    this.realtime.onOrderCreated(() => this.loadOrders());
+    this.realtime.onOrderCreated(() => {
+      this.loadOrders();
+      this.playAlert();
+    });
     this.realtime.onOrderStatusChanged(() => this.loadOrders());
+  }
+
+  private playAlert(): void {
+    this.audio
+      .play()
+      .catch((err) => console.warn('No se pudo reproducir el sonido:', err));
+
+    this.newOrderAlert.set(true);
+    setTimeout(() => this.newOrderAlert.set(false), 3000);
   }
 
   loadOrders(): void {
