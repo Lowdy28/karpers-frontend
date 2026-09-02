@@ -1,5 +1,6 @@
-import { Component, OnInit, signal, computed } from '@angular/core';
+import { Component, OnInit, inject, signal, computed } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ActivatedRoute } from '@angular/router';
 import { ProductService } from '../../services/product';
 import { OrderService } from '../../services/order';
 import { Product } from '../../models/product.model';
@@ -12,9 +13,38 @@ import { OrderItem } from '../../models/order.model';
   styleUrl: './menu.css',
 })
 export class Menu implements OnInit {
+  private route = inject(ActivatedRoute);
+  private productService = inject(ProductService);
+  private orderService = inject(OrderService);
+
   products = signal<Product[]>([]);
   cart = signal<OrderItem[]>([]);
-  tableNumber = 4; // por ahora fijo, luego viene del QR (?mesa=4)
+  tableNumber = signal<number>(0);
+  selectedVariants: Record<number, string> = {};
+
+  selectVariant(productId: number, variant: string): void {
+    this.selectedVariants[productId] = variant;
+  }
+
+  addToCart(product: Product): void {
+    const variant = this.selectedVariants[product.id];
+    const existing = this.cart().find(
+      (item) => item.productId === product.id && item.selectedVariant === variant
+    );
+
+    if (existing) {
+      this.cart.update((items) =>
+        items.map((item) =>
+          item === existing ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
+    } else {
+      this.cart.update((items) => [
+        ...items,
+        { productId: product.id, quantity: 1, selectedVariant: variant },
+      ]);
+    }
+  }
 
   cartTotal = computed(() => {
     return this.cart().reduce((total, item) => {
@@ -23,39 +53,18 @@ export class Menu implements OnInit {
     }, 0);
   });
 
-  constructor(
-    private productService: ProductService,
-    private orderService: OrderService
-  ) {}
-
   ngOnInit(): void {
+    const mesa = this.route.snapshot.queryParamMap.get('mesa');
+    this.tableNumber.set(mesa ? Number(mesa) : 0);
+
     this.productService.getAll().subscribe((data) => {
       this.products.set(data);
     });
   }
 
-  addToCart(product: Product): void {
-    const existing = this.cart().find((item) => item.productId === product.id);
-
-    if (existing) {
-      this.cart.update((items) =>
-        items.map((item) =>
-          item.productId === product.id
-            ? { ...item, quantity: item.quantity + 1 }
-            : item
-        )
-      );
-    } else {
-      this.cart.update((items) => [
-        ...items,
-        { productId: product.id, quantity: 1 },
-      ]);
-    }
-  }
-
   submitOrder(): void {
     const order = {
-      tableNumber: this.tableNumber,
+      tableNumber: this.tableNumber(),
       items: this.cart(),
     };
 
