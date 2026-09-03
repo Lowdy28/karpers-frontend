@@ -1,0 +1,45 @@
+<div class="admin-products">
+  <h1>Administrar Productos</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="name" placeholder="Nombre" />
+    <input type="number" formControlName="price" placeholder="Precio" />
+
+    <select formControlName="categoryId">
+      <option [value]="0" disabled>Elige categoría</option>
+      <option *ngFor="let category of categories()" [value]="category.id">
+        {{ category.name }}
+      </option>
+    </select>
+
+    <label>
+      <input type="checkbox" formControlName="available" />
+      Disponible
+    </label>
+
+    <button type="submit">{{ editingId() ? 'Guardar cambios' : 'Crear producto' }}</button>
+    <button type="button" *ngIf="editingId()" (click)="cancelEdit()">Cancelar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th>Precio</th>
+        <th>Disponible</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let product of products()">
+        <td>{{ product.name }}</td>
+        <td>${{ product.price }}</td>
+        <td>{{ product.available ? 'Sí' : 'No' }}</td>
+        <td>
+          <button (click)="edit(product)">Editar</button>
+          <button (click)="remove(product)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
