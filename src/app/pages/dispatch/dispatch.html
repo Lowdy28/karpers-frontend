@@ -14,6 +14,7 @@
       <li *ngFor="let item of order.items">
         {{ item.quantity }}x {{ item.product?.name }}
         <span *ngIf="item.selectedVariant"> ({{ item.selectedVariant }})</span>
+        <span *ngIf="item.notes"> — <strong>{{ item.notes }}</strong></span>
       </li>
     </ul>
 
