@@ -11,6 +11,11 @@
       <option *ngFor="let variant of product.variants" [value]="variant">{{ variant }}</option>
     </select>
 
+    <input
+      type="text"
+      placeholder="Notas (opcional)"
+      (input)="updateNotes(product.id, $any($event.target).value)"
+    />
     <button (click)="addToCart(product)">Agregar</button>
   </div>
 

@@ -21,15 +21,24 @@ export class Menu implements OnInit {
   cart = signal<OrderItem[]>([]);
   tableNumber = signal<number>(0);
   selectedVariants: Record<number, string> = {};
+  notesByProduct: Record<number, string> = {};
 
   selectVariant(productId: number, variant: string): void {
     this.selectedVariants[productId] = variant;
   }
 
+  updateNotes(productId: number, notes: string): void {
+    this.notesByProduct[productId] = notes;
+  }
+
   addToCart(product: Product): void {
     const variant = this.selectedVariants[product.id];
+    const notes = this.notesByProduct[product.id];
     const existing = this.cart().find(
-      (item) => item.productId === product.id && item.selectedVariant === variant
+      (item) =>
+        item.productId === product.id &&
+        item.selectedVariant === variant &&
+        item.notes === notes
     );
 
     if (existing) {
@@ -41,7 +50,7 @@ export class Menu implements OnInit {
     } else {
       this.cart.update((items) => [
         ...items,
-        { productId: product.id, quantity: 1, selectedVariant: variant },
+        { productId: product.id, quantity: 1, selectedVariant: variant, notes },
       ]);
     }
   }
