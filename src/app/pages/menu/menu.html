@@ -1,5 +1,6 @@
 <div class="menu">
   <header class="menu-header">
+    <span class="flame-top">🔥</span>
     <h1>Karpers</h1>
     <p class="stars">★ ★ ★ ★ ★</p>
     <p *ngIf="tableNumber() > 0" class="table-badge">Mesa {{ tableNumber() }}</p>
@@ -40,8 +41,42 @@
     </div>
   </div>
 
-  <div class="cart-bar" *ngIf="cart().length > 0">
+  <div class="order-confirmed" *ngIf="orderConfirmed()">
+    ✅ ¡Tu pedido ya está en la cocina!
+  </div>
+
+  <div class="cart-bar" *ngIf="cart().length > 0" (click)="cartPanelOpen.set(true)">
     <p>{{ cart().length }} producto(s) — <strong>${{ cartTotal() }}</strong></p>
-    <button (click)="submitOrder()">Enviar pedido</button>
+    <span class="view-cart">Ver pedido ›</span>
+  </div>
+
+  <div class="cart-overlay" *ngIf="cartPanelOpen()" (click)="cartPanelOpen.set(false)"></div>
+
+  <div class="cart-panel" *ngIf="cartPanelOpen()">
+    <div class="cart-panel-header">
+      <h2>Tu pedido</h2>
+      <button class="close-btn" (click)="cartPanelOpen.set(false)" aria-label="Cerrar">×</button>
+    </div>
+
+    <div class="cart-line" *ngFor="let item of cartWithDetails()">
+      <div class="cart-line-info">
+        <p class="cart-line-name">{{ item.name }}</p>
+        <p *ngIf="item.selectedVariant" class="cart-line-variant">{{ item.selectedVariant }}</p>
+        <p *ngIf="item.notes" class="cart-line-notes">✎ {{ item.notes }}</p>
+      </div>
+
+      <div class="cart-line-controls">
+        <button (click)="decreaseQty(item)" aria-label="Quitar uno">−</button>
+        <span>{{ item.quantity }}</span>
+        <button (click)="increaseQty(item)" aria-label="Agregar uno">+</button>
+      </div>
+
+      <p class="cart-line-subtotal">${{ item.subtotal }}</p>
+      <button class="remove-btn" (click)="removeFromCart(item)" aria-label="Eliminar">×</button>
+    </div>
+
+    <button class="submit-btn" (click)="submitOrder()">
+      Enviar pedido — ${{ cartTotal() }}
+    </button>
   </div>
 </div>

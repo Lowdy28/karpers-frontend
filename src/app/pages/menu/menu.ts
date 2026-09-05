@@ -20,6 +20,8 @@ export class Menu implements OnInit {
   products = signal<Product[]>([]);
   activeCategory = signal<string>('Todas');
   cart = signal<OrderItem[]>([]);
+  cartPanelOpen = signal<boolean>(false);
+  orderConfirmed = signal<boolean>(false);
   tableNumber = signal<number>(0);
   selectedVariants: Record<number, string> = {};
   notesByProduct: Record<number, string> = {};
@@ -41,6 +43,18 @@ export class Menu implements OnInit {
       const product = this.products().find((p) => p.id === item.productId);
       return total + (product ? product.price * item.quantity : 0);
     }, 0);
+  });
+
+  cartWithDetails = computed(() => {
+    return this.cart().map((item) => {
+      const product = this.products().find((p) => p.id === item.productId);
+      return {
+        ...item,
+        name: product?.name ?? '',
+        price: product?.price ?? 0,
+        subtotal: (product?.price ?? 0) * item.quantity,
+      };
+    });
   });
 
   ngOnInit(): void {
@@ -88,6 +102,30 @@ export class Menu implements OnInit {
     }
   }
 
+  increaseQty(item: OrderItem): void {
+    this.cart.update((items) =>
+      items.map((i) => this.isSameLine(i, item) ? { ...i, quantity: i.quantity + 1 } : i)
+    );
+  }
+
+  decreaseQty(item: OrderItem): void {
+    if (item.quantity <= 1) {
+      this.removeFromCart(item);
+      return;
+    }
+    this.cart.update((items) =>
+      items.map((i) => this.isSameLine(i, item) ? { ...i, quantity: i.quantity - 1 } : i)
+    );
+  }
+
+  removeFromCart(item: OrderItem): void {
+    this.cart.update((items) => items.filter((i) => !this.isSameLine(i, item)));
+  }
+
+  private isSameLine(a: OrderItem, b: OrderItem): boolean {
+    return a.productId === b.productId && a.selectedVariant === b.selectedVariant && a.notes === b.notes;
+  }
+
   submitOrder(): void {
     const order = {
       tableNumber: this.tableNumber(),
@@ -96,7 +134,9 @@ export class Menu implements OnInit {
 
     this.orderService.create(order).subscribe(() => {
       this.cart.set([]);
-      alert('¡Pedido enviado!');
+      this.cartPanelOpen.set(false);
+      this.orderConfirmed.set(true);
+      setTimeout(() => this.orderConfirmed.set(false), 3000);
     });
   }
 }
