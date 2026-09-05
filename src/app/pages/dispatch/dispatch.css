@@ -1,0 +1,145 @@
+.dispatch {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px 16px 40px;
+}
+
+.dispatch-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.dispatch-header h1 {
+  font-size: 30px;
+  color: var(--flame);
+  text-transform: uppercase;
+}
+
+.logout-btn {
+  background: var(--surface);
+  color: var(--paper-dim);
+  border-radius: 8px;
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.new-order-banner {
+  background: linear-gradient(90deg, var(--flame), var(--ember));
+  color: var(--ink);
+  font-weight: 700;
+  text-align: center;
+  padding: 12px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+.ticket {
+  background: var(--surface);
+  border-radius: 4px 4px 14px 14px;
+  padding: 0 18px 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.35);
+}
+
+.ticket-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0 14px;
+}
+
+.table-number {
+  font-family: var(--font-display);
+  font-size: 26px;
+  color: var(--paper);
+  letter-spacing: 1px;
+}
+
+.status-pill {
+  font-family: var(--font-display);
+  font-size: 12px;
+  letter-spacing: 1px;
+  padding: 6px 14px;
+  border-radius: 999px;
+  text-transform: uppercase;
+}
+
+.status-0 .status-pill {
+  background: linear-gradient(90deg, var(--flame), var(--gold));
+  color: #2a0d02;
+}
+
+.status-1 .status-pill {
+  background: var(--ember);
+  color: var(--ink);
+}
+
+.status-2 .status-pill {
+  background: #3fae5c;
+  color: #06210d;
+}
+
+.status-3 .status-pill {
+  background: var(--surface-2);
+  color: var(--paper-dim);
+}
+
+.ticket.status-3 {
+  opacity: 0.55;
+}
+
+.tear-line {
+  border-top: 2px dashed var(--surface-2);
+  margin-bottom: 14px;
+}
+
+.ticket ul {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 16px;
+}
+
+.ticket li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 15px;
+  padding: 7px 0;
+}
+
+.qty {
+  font-family: var(--font-display);
+  color: var(--gold);
+  font-size: 16px;
+}
+
+.item-name {
+  font-weight: 600;
+}
+
+.variant {
+  color: var(--paper-dim);
+  font-size: 13px;
+}
+
+.notes {
+  width: 100%;
+  color: var(--ember);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.advance-btn {
+  width: 100%;
+  background: linear-gradient(90deg, var(--flame), var(--ember));
+  color: var(--ink);
+  border-radius: 10px;
+  padding: 14px;
+  font-size: 15px;
+  font-family: var(--font-display);
+  letter-spacing: 0.5px;
+}
