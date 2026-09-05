@@ -18,10 +18,43 @@ export class Menu implements OnInit {
   private orderService = inject(OrderService);
 
   products = signal<Product[]>([]);
+  activeCategory = signal<string>('Todas');
   cart = signal<OrderItem[]>([]);
   tableNumber = signal<number>(0);
   selectedVariants: Record<number, string> = {};
   notesByProduct: Record<number, string> = {};
+
+  categoryNames = computed(() => {
+    const names = new Set(this.products().map((p) => p.category?.name ?? 'Otros'));
+    return ['Todas', ...names];
+  });
+
+  filteredProducts = computed(() => {
+    if (this.activeCategory() === 'Todas') return this.products();
+    return this.products().filter(
+      (p) => (p.category?.name ?? 'Otros') === this.activeCategory()
+    );
+  });
+
+  cartTotal = computed(() => {
+    return this.cart().reduce((total, item) => {
+      const product = this.products().find((p) => p.id === item.productId);
+      return total + (product ? product.price * item.quantity : 0);
+    }, 0);
+  });
+
+  ngOnInit(): void {
+    const mesa = this.route.snapshot.queryParamMap.get('mesa');
+    this.tableNumber.set(mesa ? Number(mesa) : 0);
+
+    this.productService.getAll().subscribe((data) => {
+      this.products.set(data);
+    });
+  }
+
+  getProductIcon(product: Product): string {
+    return '🔥';
+  }
 
   selectVariant(productId: number, variant: string): void {
     this.selectedVariants[productId] = variant;
@@ -55,22 +88,6 @@ export class Menu implements OnInit {
     }
   }
 
-  cartTotal = computed(() => {
-    return this.cart().reduce((total, item) => {
-      const product = this.products().find((p) => p.id === item.productId);
-      return total + (product ? product.price * item.quantity : 0);
-    }, 0);
-  });
-
-  ngOnInit(): void {
-    const mesa = this.route.snapshot.queryParamMap.get('mesa');
-    this.tableNumber.set(mesa ? Number(mesa) : 0);
-
-    this.productService.getAll().subscribe((data) => {
-      this.products.set(data);
-    });
-  }
-
   submitOrder(): void {
     const order = {
       tableNumber: this.tableNumber(),
@@ -78,8 +95,8 @@ export class Menu implements OnInit {
     };
 
     this.orderService.create(order).subscribe(() => {
-      alert('¡Pedido enviado!');
       this.cart.set([]);
+      alert('¡Pedido enviado!');
     });
   }
 }

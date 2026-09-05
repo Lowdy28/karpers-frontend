@@ -1,26 +1,47 @@
 <div class="menu">
-  <h1>Karpers</h1>
-  <p *ngIf="tableNumber() > 0">Mesa {{ tableNumber() }}</p>
+  <header class="menu-header">
+    <h1>Karpers</h1>
+    <p class="stars">★ ★ ★ ★ ★</p>
+    <p *ngIf="tableNumber() > 0" class="table-badge">Mesa {{ tableNumber() }}</p>
+  </header>
 
-  <div class="product-card" *ngFor="let product of products()">
-    <h3>{{ product.name }}</h3>
-    <p>${{ product.price }}</p>
+  <div class="tabs">
+    <button
+      class="tab"
+      [class.active]="activeCategory() === cat"
+      *ngFor="let cat of categoryNames()"
+      (click)="activeCategory.set(cat)"
+    >
+      {{ cat }}
+    </button>
+  </div>
 
-    <select *ngIf="product.variants.length > 0" (change)="selectVariant(product.id, $any($event.target).value)">
-      <option value="" disabled selected>Elige un sabor</option>
-      <option *ngFor="let variant of product.variants" [value]="variant">{{ variant }}</option>
-    </select>
+  <div class="grid">
+    <div class="product-card" *ngFor="let product of filteredProducts()">
+      <div class="product-photo">
+        <span class="icon">{{ getProductIcon(product) }}</span>
+        <span class="heart">♡</span>
+        <button class="add-btn" (click)="addToCart(product)" aria-label="Agregar">+</button>
+      </div>
 
-    <input
-      type="text"
-      placeholder="Notas (opcional)"
-      (input)="updateNotes(product.id, $any($event.target).value)"
-    />
-    <button (click)="addToCart(product)">Agregar</button>
+      <h3>{{ product.name }}</h3>
+      <p class="price">${{ product.price }}</p>
+
+      <select *ngIf="product.variants.length > 0" (change)="selectVariant(product.id, $any($event.target).value)">
+        <option value="" disabled selected>Sabor</option>
+        <option *ngFor="let variant of product.variants" [value]="variant">{{ variant }}</option>
+      </select>
+
+      <input
+        type="text"
+        placeholder="Notas"
+        (input)="updateNotes(product.id, $any($event.target).value)"
+      />
+    </div>
   </div>
 
   <div class="cart-bar" *ngIf="cart().length > 0">
-    <p>{{ cart().length }} producto(s) — Total: ${{ cartTotal() }}</p>
+    <p>{{ cart().length }} producto(s) — <strong>${{ cartTotal() }}</strong></p>
     <button (click)="submitOrder()">Enviar pedido</button>
   </div>
 </div>
