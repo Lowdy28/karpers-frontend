@@ -3,23 +3,30 @@
     🔔 ¡Pedido nuevo!
   </div>
 
-  <h1>Despacho</h1>
-  <button (click)="logout()">Cerrar sesión</button>
+  <header class="dispatch-header">
+    <h1>🔥 Despacho</h1>
+    <button class="logout-btn" (click)="logout()">Cerrar sesión</button>
+  </header>
 
-  <div class="order-card" *ngFor="let order of orders()">
-    <h3>Mesa {{ order.tableNumber }}</h3>
-    <p>Estado: {{ statusLabels[order.status] }}</p>
+  <div class="ticket" *ngFor="let order of orders()" [class]="'status-' + order.status">
+    <div class="ticket-top">
+      <span class="table-number">MESA {{ order.tableNumber }}</span>
+      <span class="status-pill">{{ statusLabels[order.status] }}</span>
+    </div>
+
+    <div class="tear-line"></div>
 
     <ul>
       <li *ngFor="let item of order.items">
-        {{ item.quantity }}x {{ item.product?.name }}
-        <span *ngIf="item.selectedVariant"> ({{ item.selectedVariant }})</span>
-        <span *ngIf="item.notes"> — <strong>{{ item.notes }}</strong></span>
+        <span class="qty">{{ item.quantity }}×</span>
+        <span class="item-name">{{ item.product?.name }}</span>
+        <span *ngIf="item.selectedVariant" class="variant">{{ item.selectedVariant }}</span>
+        <span *ngIf="item.notes" class="notes">✎ {{ item.notes }}</span>
       </li>
     </ul>
 
-    <button *ngIf="order.status < 3" (click)="advanceStatus(order)">
-      Avanzar a {{ statusLabels[order.status + 1] }}
+    <button *ngIf="order.status < 3" class="advance-btn" (click)="advanceStatus(order)">
+      Avanzar a {{ statusLabels[order.status + 1] }} →
     </button>
   </div>
 </div>
