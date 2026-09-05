@@ -1,0 +1,27 @@
+<div class="admin-categories">
+  <h1>Administrar Categorías</h1>
+
+  <form [formGroup]="form" (ngSubmit)="onSubmit()">
+    <input type="text" formControlName="name" placeholder="Nombre de categoría" />
+    <button type="submit">{{ editingId() ? 'Guardar cambios' : 'Crear categoría' }}</button>
+    <button type="button" *ngIf="editingId()" (click)="cancelEdit()">Cancelar</button>
+  </form>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nombre</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let category of categories()">
+        <td>{{ category.name }}</td>
+        <td>
+          <button (click)="edit(category)">Editar</button>
+          <button (click)="remove(category)">Eliminar</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
